@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <!-- The rest of your page's header here -->
+</head>
+<body>
+<link rel="stylesheet" href="style.css">
+<div class="user">
+    <header class="user__header">
+        <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3219/logo.svg" alt="" />
+        <h1 class="user__title">init-ui The Front end</h1>
+    </header>
+    
+    <form class="form" id="myForm">
+        <div class="form__group">
+            <input type="text" placeholder="Username" class="form__input" id="name"/>
+        </div>
+        
+        <div class="form__group">
+            <input type="email" placeholder="Email" class="form__input" id="email" />
+        </div>
+        <button class="btn" onclick="myFunction()">Submit</button>
+    </form>
+</div>
+<script type="text/javascript">
+	function myFunction() {
+    $.ajax({
+        url: "https://localhost:8080/demo/persist",
+        type: "POST",
+        data: { name: "john", email: "john@abc.com" },
+        dataType: "json",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    processResponse(result);
+                    break;
+                default:
+                    resultDiv.html(result);
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+}
+</script>
+<script type="text/javascript">
+	function myFunction() {
+    // Post a user
+	var url = "http://localhost:8080/demo/persistPerson";
+
+	var data = {};
+	data.name = document.getElementById("myForm").elements[0].value;
+	data.email = document.getElementById("myForm").elements[1].value;
+	// data.firstname = "sahil";
+	// data.email = "sahil.patil@nice.com";
+	var json = JSON.stringify(data);
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", url, true);
+	xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+	xhr.setRequestHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+	xhr.onload = function () {
+	var users = JSON.parse(xhr.responseText);
+	if (xhr.readyState == 4 && xhr.status == "201") {
+		console.table(users);
+	} else {
+		console.error(users);
+	}
+	}
+	xhr.send(json);
+}
+</script>
+</body>
+</html>
